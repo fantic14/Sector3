@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+    --font-racing: "Racing Sans One", "Arial Black", sans-serif;
+    --color-brand-red: #d90429;
+    --animate-fade-in: fadeIn 0.5s ease-out;
+}
+
+@layer utilities {
+    .text-shadow-glow {
+        text-shadow: 0 0 20px rgba(217, 4, 41, 0.6);
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
+body {
+    background: #09090b;
+    color: #fff;
+    overflow-x: hidden;
+}

@@ -1,0 +1,6 @@
+{
+  "name": "@assets/images",
+  "version": "1.0.0",
+  "main": "./constants.ts",
+  "types": "./constants.ts"
+}
