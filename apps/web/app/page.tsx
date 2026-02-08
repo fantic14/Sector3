@@ -71,10 +71,10 @@ export default function Home() {
                         <RaceCard status="current" name={CURRENT_RACE.name} image={CURRENT_RACE.img} date={""} />
                     </div>
 
-                    <div className="flex flex-col gap-2 min-w-0 flex-1 overflow-hidden">
+                    <div className="flex flex-col gap-2 min-w-0 flex-1 overflow-hidden my-auto">
                         <span className="text-xs uppercase text-zinc-400 font-semibold tracking-widest pl-1">Upcoming race weekends</span>
 
-                        <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 pr-8 mask-linear-fade">
+                        <div className="flex gap-4 overflow-x-auto no-scrollbar pr-8 mask-linear-fade">
                             {UPCOMING_RACES.map((race, i) => (
                                 <RaceCard key={i} status="future" name={race.name} image={race.img} date={""} />
                             ))}

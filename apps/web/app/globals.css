@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Kolker+Brush&family=Michroma&display=swap');
 @import "tailwindcss";
 
 @theme {
     --font-racing: "Racing Sans One", "Arial Black", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
     --color-brand-red: #d90429;
     --animate-fade-in: fadeIn 0.5s ease-out;
 }
