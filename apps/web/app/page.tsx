@@ -42,7 +42,7 @@ export default function Home() {
 
             <div className="absolute inset-0 z-0">
                 <div
-                    className={"absolute inset-0 bg-(image:--ASSETS.BACKGROUNDS.HOMEPAGE) bg-cover bg-center opacity-40 blur-sm"}
+                    className={"absolute inset-0 bg-cover bg-center opacity-40 blur-sm"}
                     style={{ backgroundImage: `url(${ASSETS.BACKGROUNDS.HOMEPAGE})` }}
                 />
                 <div className="absolute inset-0 bg-radial-[circle_at_center,var(--tw-gradient-stops)] from-transparent via-black/40 to-black" />
@@ -51,7 +51,7 @@ export default function Home() {
             <div className="relative z-10 flex flex-col items-center h-full w-full">
 
                 <div className="text-center mt-[10vh] space-y-2">
-                    <h1 className="text-7xl font-black italic tracking-tighter text-brand-red drop-shadow-lg" style={{ fontFamily: 'var(--font-racing), sans-serif' }}>
+                    <h1 className="text-7xl font-black italic tracking-tighter text-brand-red drop-shadow-lg font-racing">
                         Sector<span className="text-brand-red/80">3</span>
                     </h1>
                     <p className="text-zinc-300 text-lg font-light tracking-wide opacity-90">
