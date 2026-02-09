@@ -6,10 +6,11 @@ interface RaceCardProps {
     name: string;
     image: string;
     date: string;
+    onClick?: () => void;
     className?: string;
 }
 
-export const RaceCard = ({ status, name, image, date, className = "" }: RaceCardProps) => {
+export const RaceCard = ({ status, name, image, date, onClick, className = "" }: RaceCardProps) => {
     const isCurrent = status === "current" || status === "live";
     const isPast = status === "past";
 
