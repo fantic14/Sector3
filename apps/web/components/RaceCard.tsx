@@ -11,7 +11,7 @@ interface RaceCardProps {
 }
 
 export const RaceCard = ({ status, name, image, date, onClick, className = "" }: RaceCardProps) => {
-    const isCurrent = status === "current" || status === "live";
+    const isCurrent = status === "next" || status === "live";
     const isPast = status === "past";
 
     return (

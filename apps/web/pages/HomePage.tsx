@@ -1,43 +1,25 @@
+'use client';
+
 import { RaceCard } from "../components/RaceCard";
 import { ASSETS } from "@assets/images";
 import Link from "next/link";
+import { RaceService } from "../services/races";
+import { RaceSessions } from "@f1/types";
+import { useEffect, useState } from "react";
+
 
 const PAST_RACE = { name: "Abu Dhabi GP", img: ASSETS.TRACKS.ABUDHABI };
 const CURRENT_RACE = { name: "Australian GP", img: ASSETS.TRACKS.AUSTRALIA };
-const UPCOMING_RACES = [
-    { name: "Chinese GP", img: ASSETS.TRACKS.CHINA },
-    { name: "Japanese GP", img: ASSETS.TRACKS.JAPAN },
-    { name: "Miami GP", img: ASSETS.TRACKS.MIAMI }, // Added to demonstrate scroll
-];
-
-// // Example of how strictly typed your data is now:
-// const RACES: RaceEvent[] = [
-//     {
-//         id: "2026-bahrain",
-//         slug: "bahrain",
-//         name: "Bahrain Grand Prix",
-//         round: 1,
-//         season: 2026,
-//         status: "past",
-//         date: "2026-03-02T15:00:00Z",
-//         circuit: {
-//             id: "bahrain",
-//             name: "Bahrain International Circuit",
-//             city: "Sakhir",
-//             country: "Bahrain",
-//             image: "/images/bahrain.jpg"
-//         },
-//         sessions: { /* ... */ }
-//     },
-//     // ... more races
-// ];
 
 export default function HomePage() {
 
-    // const pastRace = RACES.find(r => r.status === "past");
-    // const currentRace = RACES.find(r => r.status === "current");
-    // const upcomingRaces = RACES.filter(r => r.status === "future");
+    const [pastRaces, setPastRaces] = useState<RaceSessions[]>([])
+    const [liveOrNextRace, setLiveOrNextRace] = useState<RaceSessions>()
+    const [upcomingRaces, setUpcomingRaces] = useState<RaceSessions[]>([])
 
+    useEffect(() => {
+        RaceService.getUpcomingRaces().then(setUpcomingRaces);
+    }, [])
 
     return (
         <main className="relative select-none h-screen w-full flex flex-col overflow-hidden font-sans selection:bg-red-600 selection:text-white">
@@ -62,16 +44,19 @@ export default function HomePage() {
                 </div>
 
                 <div className="w-full max-w-400 flex items-end gap-6 mt-[10vh]">
-
                     <div className="hidden xl:flex flex-col gap-2 my-auto">
                         <span className="text-xs uppercase text-zinc-500 font-semibold tracking-widest pl-1">Last race weekend</span>
-                        <RaceCard status="past" name={PAST_RACE.name} image={PAST_RACE.img} date={""} />
+                        {pastRaces.map((race, i) => (
+                            <Link key={i} href={"/table"}>
+                                <RaceCard status="past" name={PAST_RACE.name} image={PAST_RACE.img} date={""} />
+                            </Link>
+                        ))}
                     </div>
 
                     <div className="flex flex-col gap-2 shrink-0">
                         <span className="text-xs uppercase text-white font-bold tracking-widest pl-1">THIS WEEKEND</span>
                         <Link href="/table">
-                            <RaceCard status="current" name={CURRENT_RACE.name} image={CURRENT_RACE.img} date={""}/>
+                            <RaceCard status="live" name={CURRENT_RACE.name} image={CURRENT_RACE.img} date={""} />
                         </Link>
                     </div>
 
@@ -79,8 +64,10 @@ export default function HomePage() {
                         <span className="text-xs uppercase text-zinc-400 font-semibold tracking-widest pl-1">Upcoming race weekends</span>
 
                         <div className="flex gap-4 overflow-x-auto no-scrollbar pr-8 mask-linear-fade">
-                            {UPCOMING_RACES.map((race, i) => (
-                                <RaceCard key={i} status="future" name={race.name} image={race.img} date={""} />
+                            {upcomingRaces.map((race, i) => (
+                                <Link key={i} href={"/table"}>
+                                    <RaceCard status="future" name={race.circuit_short_name} image={ASSETS.TRACKS[race.circuit_key]} date={""} />
+                                </Link>
                             ))}
                         </div>
                     </div>
