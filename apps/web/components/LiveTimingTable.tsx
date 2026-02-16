@@ -6,7 +6,7 @@ import Image from "next/image";
 
 // Mock data to match your screenshot exactly
 const DRIVERS = [
-    { pos: 1, code: 'LEC', team: 'HP SCUDERIA FERRARI', s1: '46.4326', s2: '26.453', s3: '33.425', last: '1:46.3016', interval: 33, color: 'text-ferrari'},
+    { pos: 1, code: 'LEC', team: 'HP SCUDERIA FERRARI', s1: '46.4326', s2: '26.453', s3: '33.425', last: '1:46.3016', interval: 33, color: 'text-ferrari' },
     { pos: 2, code: 'VER', team: 'RED BULL RACING', s1: '46.4326', s2: '26.453', s3: '33.425', last: '1:46.3016', interval: '+1.0', color: 'text-redbull' },
     { pos: 3, code: 'RUS', team: 'PETRONAS MERCEDES', s1: '46.4326', s2: '26.453', s3: '33.425', last: '1:46.3016', interval: '+1.0', color: 'text-mercedes' },
     { pos: 4, code: 'NOR', team: 'MCLAREN MERCEDES', s1: '46.4326', s2: '26.453', s3: '33.425', last: '1:46.3016', interval: '+1.0', color: 'text-mclaren' },

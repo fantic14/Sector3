@@ -54,7 +54,7 @@ export default function HomePage() {
                     </div>
 
                     <div className="flex flex-col gap-2 shrink-0">
-                        <span className="text-xs uppercase text-white font-bold tracking-widest pl-1">THIS WEEKEND</span>
+                        <span className="text-xs uppercase text-white font-bold tracking-widest pl-1">NEXT RACE</span>
                         <Link href="/table">
                             <RaceCard status="live" name={CURRENT_RACE.name} image={CURRENT_RACE.img} date={""} />
                         </Link>
