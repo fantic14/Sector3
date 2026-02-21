@@ -1,5 +1,7 @@
 import HomePageBackground from "./images/HomePageBackground.jpg";
 
+import Loading from "./images/loadingGif.gif"
+
 import AbuDhabiGP from "./images/gp-images/abu-dhabi-gp.webp";
 import AustralianGP from "./images/gp-images/australian-gp.jpg";
 import ChineseGP from "./images/gp-images/chinese-gp.jpg";
@@ -69,4 +71,5 @@ export const ASSETS = {
         FERRARI: FerrariLogo.src,
         REDBULL: RedBullLogo.src,
     },
+    LOADING: Loading.src,
 } as const;
