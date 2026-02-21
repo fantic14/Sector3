@@ -8,7 +8,7 @@ export interface Circuit {
     image: string;
 }
 
-export interface RaceSessions {
+export interface RaceSession {
     circuit_key: number;
     circuit_short_name: string;
     country_code: string;
@@ -34,7 +34,7 @@ export interface RaceEvent {
     status: RaceStatus;
     date: string;
     circuit: Circuit;
-    sessions: RaceSessions;
+    sessions: RaceSession;
 
     winner?: {
         driverId: string;

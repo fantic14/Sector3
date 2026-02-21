@@ -38,7 +38,7 @@ export const RaceCard = ({ status, name, image, date, onClick, className = "" }:
             </div>
 
             <div className="absolute bottom-0 left-0 w-full font-mono">
-                {isCurrent && (
+                {(status === "live") && (
                     <div className="absolute -top-[500%] left-4 bg-brand-red text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">
                         Live Stats
                     </div>

@@ -4,22 +4,47 @@ import { RaceCard } from "../components/RaceCard";
 import { ASSETS } from "@assets/images";
 import Link from "next/link";
 import { RaceService } from "../services/races";
-import { RaceSessions } from "@f1/types";
+import { RaceSession } from "@f1/types";
 import { useEffect, useState } from "react";
 
 
-const PAST_RACE = { name: "Abu Dhabi GP", img: ASSETS.TRACKS.ABUDHABI };
-const CURRENT_RACE = { name: "Australian GP", img: ASSETS.TRACKS.AUSTRALIA };
-
 export default function HomePage() {
 
-    const [pastRaces, setPastRaces] = useState<RaceSessions[]>([])
-    const [liveOrNextRace, setLiveOrNextRace] = useState<RaceSessions>()
-    const [upcomingRaces, setUpcomingRaces] = useState<RaceSessions[]>([])
+    const [pastRaces, setPastRaces] = useState<RaceSession[]>([]);
+    const [liveRace, setLiveRace] = useState<RaceSession | null>(null);
+    const [nextRace, setNextRace] = useState<RaceSession | null>(null);
+    const [upcomingRaces, setUpcomingRaces] = useState<RaceSession[]>([]);
+
+    const [isLoadingLiveRace, setIsLoadingLiveRace] = useState<boolean>(true);
 
     useEffect(() => {
-        RaceService.getUpcomingRaces().then(setUpcomingRaces);
-    }, [])
+        const loadData = async () => {
+            setIsLoadingLiveRace(true);
+            // 1. Fetch both at once
+            const [races, live] = await Promise.all([
+                RaceService.getUpcomingRaces(),
+                RaceService.getLiveSession()
+            ]);
+
+            // 2. Determine Next Race logic right here
+            if (live === null && races.length > 0) {
+                // Create a copy so we don't mutate the original list
+                const racesCopy = [...races];
+                const next = racesCopy.shift(); // Remove the first one
+
+                setNextRace(next ? next : null);
+                setUpcomingRaces(racesCopy); // Set the remaining list
+            } else {
+                setUpcomingRaces(races);
+                setNextRace(null);
+            }
+
+            setLiveRace(live);
+            setIsLoadingLiveRace(false);
+        };
+
+        loadData();
+    }, []); // No dependencies = No loops
 
     return (
         <main className="relative select-none h-screen w-full flex flex-col overflow-hidden font-sans selection:bg-red-600 selection:text-white">
@@ -48,16 +73,25 @@ export default function HomePage() {
                         <span className="text-xs uppercase text-zinc-500 font-semibold tracking-widest pl-1">Last race weekend</span>
                         {pastRaces.map((race, i) => (
                             <Link key={i} href={"/table"}>
-                                <RaceCard status="past" name={PAST_RACE.name} image={PAST_RACE.img} date={""} />
+                                <RaceCard status="past" name={race.circuit_short_name} image={ASSETS.TRACKS[race.circuit_key]} date={""} />
                             </Link>
                         ))}
                     </div>
 
                     <div className="flex flex-col gap-2 shrink-0">
                         <span className="text-xs uppercase text-white font-bold tracking-widest pl-1">NEXT RACE</span>
-                        <Link href="/table">
-                            <RaceCard status="live" name={CURRENT_RACE.name} image={CURRENT_RACE.img} date={""} />
-                        </Link>
+                        {isLoadingLiveRace ? (
+                            <div>Loading...</div>
+                        ) : (
+                            <Link href="/table">
+                                <RaceCard
+                                    status={liveRace ? "live" : "next"}
+                                    name={liveRace?.circuit_short_name ?? (nextRace ? nextRace.circuit_short_name : "")}
+                                    image={ASSETS.TRACKS[liveRace?.circuit_key ?? (nextRace ? nextRace.circuit_key : "")]}
+                                    date={""}
+                                />
+                            </Link>
+                        )}
                     </div>
 
                     <div className="flex flex-col gap-2 min-w-0 flex-1 overflow-hidden my-auto">
@@ -77,7 +111,7 @@ export default function HomePage() {
 
             <footer className="absolute bottom-0 w-full z-20 bg-black/80 backdrop-blur-md border-t border-white/5 py-3 px-8 flex justify-between items-center text-[10px] uppercase text-zinc-500 tracking-widest">
                 <p>© 2026 Sector3 Live. All rights reserved.</p>
-                <p>Data provided by [API Name]. Not affiliated with Formula 1.</p>
+                <p>Data provided by openf1.org. Not affiliated with Formula 1.</p>
             </footer>
         </main>
     );
