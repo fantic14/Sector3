@@ -1,23 +1,23 @@
-import { RaceSessions } from '@f1/types'
+import { RaceSession } from '@f1/types'
 
 const API_BASE_URL = "https://api.openf1.org/v1"
 
-const current_year = new Date().getFullYear();
+const currentYear = new Date().getFullYear();
 
 export const RaceService = {
 
-    async getThisYearsRaces(): Promise<RaceSessions[]> {
-        const response = await fetch(`${API_BASE_URL}/sessions?year=${current_year}&session_name=Race`);
-        if (!response.ok) throw new Error("Failed to fetch this years races");
+    async getRacesForYear(year: number): Promise<RaceSession[]> {
+        const response = await fetch(`${API_BASE_URL}/sessions?year=${year}&session_name=Race`);
+        if (!response.ok) throw new Error(`Failed to fetch ${year} years races`);
 
-        const result: RaceSessions[] = await response.json();
+        const result: RaceSession[] = await response.json();
         return result;
     },
 
-    async getUpcomingRaces(): Promise<RaceSessions[]> {
-        const races: RaceSessions[] = await this.getThisYearsRaces();
+    async getUpcomingRaces(): Promise<RaceSession[]> {
+        const races: RaceSession[] = await this.getRacesForYear(currentYear);
 
-        const upcomingRaces: RaceSessions[] = []
+        const upcomingRaces: RaceSession[] = []
         const now = new Date();
 
         for (const race of races) {
@@ -28,12 +28,26 @@ export const RaceService = {
         return upcomingRaces;
     },
 
-    // TODO finish this function
-    async getLiveRace(): Promise<RaceSessions> {
-        const response = await fetch(`${API_BASE_URL}/sessions?year=${current_year}`)
-        if (!response.ok) throw new Error("Failed to fetch live race");
+    async getLiveSession(): Promise<RaceSession | null> {
+        const races: RaceSession[] = await this.getRacesForYear(currentYear);
 
-        const result: RaceSessions = await response.json()
-        return result;
+        const now = new Date();
+        let liveRace: RaceSession | null = null;
+
+        for (const race of races) {
+            const raceStart = new Date(race.date_start);
+            const raceEnd = new Date(race.date_end);
+
+            if (raceStart <= now && raceEnd >= now) {
+                liveRace = race;
+                break;
+            }
+        }
+
+        return liveRace;
+    },
+
+    async getPastRacesForYear(year: number): Promise<RaceSession[]> {
+        return await this.getRacesForYear(year);
     }
 }
