@@ -7,7 +7,12 @@ const currentYear = new Date().getFullYear();
 export const RaceService = {
 
     async getRacesForYear(year: number): Promise<RaceSession[]> {
-        const response = await fetch(`${API_BASE_URL}/sessions?year=${year}&session_name=Race`);
+        const response = await fetch(`${API_BASE_URL}/sessions?year=${year}&session_name=Race`, {
+            cache: 'no-store',
+            headers: {
+                'Cache-Control': 'no-cache',
+            },
+        });
         if (!response.ok) throw new Error(`Failed to fetch ${year} years races`);
 
         const result: RaceSession[] = await response.json();

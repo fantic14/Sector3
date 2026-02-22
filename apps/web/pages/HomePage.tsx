@@ -7,6 +7,7 @@ import { RaceService } from "../services/races";
 import { RaceSession } from "@f1/types";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 
 export default function HomePage() {
@@ -17,11 +18,13 @@ export default function HomePage() {
     const [upcomingRaces, setUpcomingRaces] = useState<RaceSession[]>([]);
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
     const [selectedYear, setSelectedYear] = useState<number>(2026);
     const [isDropupOpen, setIsDropupOpen] = useState<boolean>(false);
     const dropupRef = useRef<HTMLDivElement>(null);
 
     const years = [2026, 2025, 2024, 2023];
+    const router = useRouter();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -34,25 +37,38 @@ export default function HomePage() {
     }, []);
 
     useEffect(() => {
-        const loadData = async () => {
+        const maxRetries = 3;
+        const retryDelay = 1000;
+
+        const loadData = async (retryCount = 0) => {
             setIsLoading(true);
-            const [races, live] = await Promise.all([
-                RaceService.getUpcomingRaces(),
-                RaceService.getLiveSession()
-            ]);
+            setError(null);
+            try {
+                const [races, live] = await Promise.all([
+                    RaceService.getUpcomingRaces(),
+                    RaceService.getLiveSession()
+                ]);
 
-            if (live === null && races.length > 0) {
-                const racesCopy = [...races];
-                const next = racesCopy.shift();
+                if (live === null && races.length > 0) {
+                    const racesCopy = [...races];
+                    const next = racesCopy.shift();
 
-                setNextRace(next ? next : null);
-                setUpcomingRaces(racesCopy);
-            } else {
-                setUpcomingRaces(races);
-                setNextRace(null);
+                    setNextRace(next ? next : null);
+                    setUpcomingRaces(racesCopy);
+                } else {
+                    setUpcomingRaces(races);
+                    setNextRace(null);
+                }
+
+                setLiveRace(live);
+            } catch (e) {
+                if (retryCount < maxRetries) {
+                    setTimeout(() => loadData(retryCount + 1), retryDelay);
+                    return;
+                } else {
+                    setError(e instanceof Error ? e.message : "Failed to load races");
+                }
             }
-
-            setLiveRace(live);
             setIsLoading(false);
         };
 
@@ -84,18 +100,30 @@ export default function HomePage() {
                 <div className="w-full max-w-400 flex items-end gap-6 mt-[10vh]">
 
                     <div className="flex flex-col gap-2 shrink-0">
-                        <span className="text-xs uppercase text-white font-bold tracking-widest pl-1">NEXT RACE</span>
                         {isLoading ? (
-                            <Image src={ASSETS.LOADING} alt="Loading..." width={20} height={20} />
+                            <>
+                                <span className="text-xs uppercase text-white font-bold tracking-widest pl-1">NEXT RACE</span>
+                                <Image src={ASSETS.LOADING} alt="Loading..." width={20} height={20} />
+                            </>
+                        ) : error ? (
+                            <button
+                                onClick={() => window.location.reload()}
+                                className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 text-sm rounded border border-white/10"
+                            >
+                                Retry
+                            </button>
                         ) : (
-                            <Link href="/table">
-                                <RaceCard
-                                    status={liveRace ? "live" : "next"}
-                                    name={liveRace?.circuit_short_name ?? (nextRace ? nextRace.circuit_short_name : "")}
-                                    image={ASSETS.TRACKS[liveRace?.circuit_key ?? (nextRace ? nextRace.circuit_key : "")]}
-                                    date={""}
-                                />
-                            </Link>
+                            <>
+                                <span className="text-xs uppercase text-white font-bold tracking-widest pl-1">NEXT RACE</span>
+                                <Link href="/table">
+                                    <RaceCard
+                                        status={liveRace ? "live" : "next"}
+                                        name={liveRace?.circuit_short_name ?? (nextRace ? nextRace.circuit_short_name : "")}
+                                        image={ASSETS.TRACKS[liveRace?.circuit_key ?? (nextRace ? nextRace.circuit_key : "")]}
+                                        date={""}
+                                    />
+                                </Link>
+                            </>
                         )}
                     </div>
 
@@ -105,6 +133,8 @@ export default function HomePage() {
                         <div className="flex gap-4 overflow-x-auto no-scrollbar pr-8 mask-linear-fade">
                             {isLoading ? (
                                 <Image src={ASSETS.LOADING} alt="Loading..." width={20} height={20} />
+                            ) : error ? (
+                                <span className="text-zinc-500 text-sm">Unable to load races</span>
                             ) : (
                                 <>
                                     {upcomingRaces.map((race, i) => (
@@ -135,7 +165,7 @@ export default function HomePage() {
                                 <button
                                     key={year}
                                     // TODO make every year to open new tab with all races from that year
-                                    onClick={() => { }}
+                                    onClick={() => { setIsDropupOpen(false); router.push("/previousRaces"); }}
                                     className={`block w-full px-4 py-2 text-left hover:bg-white/10 transition-colors ${selectedYear === year ? 'text-brand-red' : 'text-zinc-400'}`}
                                 >
                                     {year}
