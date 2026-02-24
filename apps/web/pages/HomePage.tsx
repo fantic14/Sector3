@@ -165,7 +165,7 @@ export default function HomePage() {
                                 <button
                                     key={year}
                                     // TODO make every year to open new tab with all races from that year
-                                    onClick={() => { setIsDropupOpen(false); router.push("/previousRaces"); }}
+                                    onClick={() => { setIsDropupOpen(false); router.push(`/previousRaces?year=${year}`); }}
                                     className={`block w-full px-4 py-2 text-left hover:bg-white/10 transition-colors ${selectedYear === year ? 'text-brand-red' : 'text-zinc-400'}`}
                                 >
                                     {year}
