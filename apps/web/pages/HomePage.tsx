@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 
 export default function HomePage() {
 
-    const [pastRaces, setPastRaces] = useState<RaceSession[]>([]);
     const [liveRace, setLiveRace] = useState<RaceSession | null>(null);
     const [nextRace, setNextRace] = useState<RaceSession | null>(null);
     const [upcomingRaces, setUpcomingRaces] = useState<RaceSession[]>([]);

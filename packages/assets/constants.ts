@@ -17,6 +17,7 @@ import AustrianGP from "./images/gp-images/austrian-gp.jpg";
 import MonacoGP from "./images/gp-images/monaco-gp.jpg";
 import CanadianGP from "./images/gp-images/canadian-gp.jpg";
 import ItalianGP from "./images/gp-images/italian-gp.jpg";
+import ImolaGP from "./images/gp-images/imola-gp.jpg"
 import NetherlandGP from "./images/gp-images/netherlands-gp.jpg";
 import SingaporeGP from "./images/gp-images/singapore-gp.jpg";
 import BahrainGP from "./images/gp-images/bahrain-gp.jpg";
@@ -43,6 +44,7 @@ export const ASSETS = {
         MIAMI: MiamiGP.src,
         2: SilverstoneGP.src,
         4: HungarianGP.src,
+        6: ImolaGP.src,
         7: BelgianGP.src,
         9: AmericanGP.src,
         10: AustralianGP.src,

@@ -6,6 +6,8 @@ import { RaceSession } from "@f1/types";
 import { RaceService } from "../services/races";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { RaceCard } from "../components/RaceCard";
+import Link from "next/link";
 
 export default function PreviousRaces() {
 
@@ -43,7 +45,7 @@ export default function PreviousRaces() {
     }, [year]);
 
     return (
-        <main className="relative select-none h-screen w-full flex flex-col overflow-hidden font-sans selection:bg-red-600 selection:text-white">
+        <main className="relative select-none h-screen w-full flex flex-col font-sans selection:bg-red-600 selection:text-white">
 
             <div className="absolute inset-0 z-0">
                 <div
@@ -53,27 +55,33 @@ export default function PreviousRaces() {
                 <div className="absolute inset-0 bg-radial-[circle_at_center,var(--tw-gradient-stops)] from-transparent via-black/40 to-black" />
             </div>
 
-            <p>{year}</p>
+            <h2 className="flex justify-around py-[2vh] text-8xl italic font-racing text-red-500">{year}</h2>
 
-            {isLoading ? (
-                <>
-                    <span className="text-xs uppercase text-white font-bold tracking-widest pl-1">NEXT RACE</span>
-                    <Image src={ASSETS.LOADING} alt="Loading..." width={20} height={20} />
-                </>
-            ) : error ? (
-                <button
-                    onClick={() => window.location.reload()}
-                    className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 text-sm rounded border border-white/10"
-                >
-                    Retry
-                </button>
-            ) : (races.map(race => {
-                return (
-                    <div key={race.circuit_key}>
-                        <p>{race.circuit_short_name}</p>
-                    </div>
-                )
-            }))}
+            <div className="flex flex-wrap content-start gap-y-[5vh] justify-around overflow-y-auto h-full p-4">
+                {isLoading ? (
+                    <>
+                        <span className="text-xs uppercase text-white font-bold tracking-widest pl-1">NEXT RACE</span>
+                        <Image src={ASSETS.LOADING} alt="Loading..." width={20} height={20} />
+                    </>
+                ) : error ? (
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 text-sm rounded border border-white/10"
+                    >
+                        Retry
+                    </button>
+                ) : (
+                    <>
+                        {races.map(race => {
+                            return (
+                                <Link key={race.circuit_key} href={""}>
+                                    <RaceCard status="past" name={race.circuit_short_name} image={ASSETS.TRACKS[race.circuit_key]} date={""} />
+                                </Link>
+                            )
+                        })}
+                    </>
+                )}
+            </div>
 
         </main>
     )

@@ -18,9 +18,9 @@ export const RaceCard = ({ status, name, image, date, onClick, className = "" }:
         <div
             className={`
         relative shrink-0 overflow-hidden rounded-xl transition-all duration-300 group cursor-pointer bg-[#D9D9D9]
-        ${isCurrent ? "w-[25vw] h-[17vw] hover:scale-102 z-10 opacity-70 hover:opacity-90" : ""}
-        ${isPast ? "w-[19vw] h-[12vw] opacity-60 hover:opacity-80 grayscale" : ""}
-        ${status === "future" ? "w-[19vw] h-[12vw] opacity-60 hover:opacity-80" : ""}
+        ${isCurrent ? "w-[25vw] h-[17vw] hover:scale-102 z-10 opacity-70 hover:opacity-90 " : " "}
+        ${isPast ? "w-[19vw] h-[12vw] opacity-70 hover:opacity-80 " : " "}
+        ${status === "future" ? "w-[19vw] h-[12vw] opacity-60 hover:opacity-80 " : " "}
         ${className}
       `}
         >
